@@ -1,35 +1,33 @@
 <?php
 session_start();
-// Verifica login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
-
 require_once 'Model/Conexao.php';
 
 $conexao = new Conexao();
 $conn = $conexao->getConnection();
 
-// Consulta tarefas por mês para o técnico logado
 $stmt = $conn->prepare("
-    SELECT MONTH(data) AS mes, COUNT(*) AS total
+    SELECT MONTH(data) AS mes, status, COUNT(*) AS total
     FROM tarefas
     WHERE tecnico_id = :tecnico_id AND YEAR(data) = YEAR(CURDATE())
-    GROUP BY MONTH(data)
+    GROUP BY MONTH(data), status
 ");
-
 $stmt->bindParam(':tecnico_id', $_SESSION['user_id']);
 $stmt->execute();
 
 $dados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Prepara os arrays para o gráfico
+// Inicializa arrays
 $meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-$quantidades = array_fill(0, 12, 0); // Inicializa com zeros
+$pendentes = array_fill(0, 12, 0);
+$concluidas = array_fill(0, 12, 0);
 
 foreach ($dados as $row) {
-    $quantidades[$row['mes'] - 1] = (int)$row['total'];
+    $index = $row['mes'] - 1;
+    if ($row['status'] === 'pendente') {
+        $pendentes[$index] = (int)$row['total'];
+    } else {
+        $concluidas[$index] = (int)$row['total'];
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -53,27 +51,36 @@ foreach ($dados as $row) {
     <canvas id="graficoDesempenho" height="100"></canvas>
   </div>
 
-  <script>
-    const ctx = document.getElementById('graficoDesempenho').getContext('2d');
-    const grafico = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: <?= json_encode($meses) ?>,
-        datasets: [{
-          label: 'Tarefas realizadas',
-          data: <?= json_encode($quantidades) ?>,
-          backgroundColor: 'rgba(25, 135, 84, 0.7)'
-        }]
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('graficoDesempenho').getContext('2d');
+
+const grafico = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: <?= json_encode($meses) ?>,
+    datasets: [
+      {
+        label: 'Pendentes',
+        data: <?= json_encode($pendentes) ?>,
+        backgroundColor: 'rgba(220, 53, 69, 0.7)' // vermelho
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          title: { display: true, text: 'Tarefas por mês (ano atual)' }
-        }
+      {
+        label: 'Concluídas',
+        data: <?= json_encode($concluidas) ?>,
+        backgroundColor: 'rgba(25, 135, 84, 0.7)' // verde
       }
-    });
-  </script>
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      title: { display: true, text: 'Tarefas por mês (pendentes e concluídas)' },
+      legend: { position: 'top' }
+    }
+  }
+});
+</script>
 
 </body>
 </html>

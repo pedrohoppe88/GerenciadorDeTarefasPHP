@@ -1,10 +1,10 @@
 <?php
 
 class Conexao {
-    private $host = 'localhost';
-    private $user = 'root';
-    private $password = '12345';
-    private $database = 'GTMIL';
+    private $host;
+    private $user;
+    private $password;
+    private $database;
     private $conn;
 
     public $total = 0;

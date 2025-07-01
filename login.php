@@ -134,18 +134,6 @@
                 <span class="error-message">Senha deve ter pelo menos 6 caracteres</span>
             </div>
             
-            <div class="form-group">
-                <label for="graduacao">Graduação*</label>
-                <select id="graduacao" name="graduacao" required>
-                    <option value="" disabled selected>Selecione sua graduação</option>
-                    <option value="bacharelado">Bacharelado</option>
-                    <option value="licenciatura">Licenciatura</option>
-                    <option value="tecnologo">Tecnólogo</option>
-                    <option value="mestrado">Mestrado</option>
-                    <option value="doutorado">Doutorado</option>
-                </select>
-                <span class="error-message">Selecione uma opção</span>
-            </div>
             
             <button type="submit" class="btn-submit">Cadastrar</button>
         </form>

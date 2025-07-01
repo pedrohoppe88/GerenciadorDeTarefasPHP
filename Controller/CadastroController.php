@@ -10,10 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($name) || empty($password) || empty($graduacao)) {
         echo "<script>alert('Preencha todos os campos.');</script>";
     } else {
-        $usuario = new Usuario();
-        $result = $usuario->register($name, $password, $graduacao);
+        
+        $usuario = new UserModel($name, $password, $graduacao);
+        $result = $usuario->cadastrar();
 
-        if ($result === "Registro bem-sucedido.") {
+        if ($result) {
             header("Location: ../login.php");
             exit();
         } else {

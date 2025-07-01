@@ -5,7 +5,7 @@ require_once '../Model/UserModel.php';
         // Validação básica
         $name = isset($_POST['name']) ? trim($_POST['name']) : '';
         $password = isset($_POST['password']) ? trim($_POST['password']) : '';
-        $graduacao = isset($_POST['graduacao']) ? trim($_POST['graduacao']) : '';
+
 
         function checkLogin($name, $password, $conn) {
            

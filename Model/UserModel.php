@@ -5,14 +5,14 @@ class UserModel
 {
     public $conn;
     public $id;
-    public $nome;
+    public $name;
     public $password;
     public $graduacao;
 
-    public function __construct($nome = null, $password = null, $graduacao = null)
+    public function __construct($name = null, $password = null, $graduacao = null)
     {
         $this->id = null;
-        $this->nome = $nome;
+        $this->name = $name;
         $this->password = $password;
         $this->graduacao = $graduacao;
 
@@ -22,9 +22,9 @@ class UserModel
 
     public function cadastrar()
     {
-        // Verifica se já existe usuário com o mesmo nome
-        $check = $this->conn->prepare("SELECT * FROM tecnicos WHERE name = :nome");
-        $check->bindParam(':nome', $this->nome);
+        // Verifica se já existe usuário com o mesmo name
+        $check = $this->conn->prepare("SELECT * FROM tecnicos WHERE name = :name");
+        $check->bindParam(':name', $this->name);
         $check->execute();
 
         if ($check->rowCount() > 0) {
@@ -34,8 +34,8 @@ class UserModel
 
         $hashedSenha = password_hash($this->password, PASSWORD_DEFAULT);
 
-        $stmt = $this->conn->prepare("INSERT INTO tecnicos (nome, password, graduacao) VALUES (:nome, :password, :graduacao)");
-        $stmt->bindParam(':nome', $this->nome);
+        $stmt = $this->conn->prepare("INSERT INTO tecnicos (name, password, graduacao) VALUES (:name, :password, :graduacao)");
+        $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':password', $hashedSenha);
         $stmt->bindParam(':graduacao', $this->graduacao);
 
@@ -44,8 +44,6 @@ class UserModel
             return true;
         } catch (PDOException $e) {
             echo "<script>alert('Erro ao cadastrar: " . $e->getMessage() . "');</script>";
-            // Para depuração, descomente a linha abaixo:
-            // var_dump($e->getMessage());
             return false;
         }
     }

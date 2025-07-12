@@ -21,7 +21,8 @@ require_once '../Model/UserModel.php';
             }
         } 
 
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {
             $name = isset($_POST['name']) ? trim($_POST['name']) : '';
             $password = isset($_POST['password']) ? trim($_POST['password']) : '';
 
@@ -33,7 +34,7 @@ require_once '../Model/UserModel.php';
             if ($user) {
                 session_start();
                 $_SESSION['user_id'] = $user['id'];
-                header("Location: ../teste.php");
+                header("Location: ../cadastroTarefa.php");
                 exit();
             } else {
                 echo "<script>alert('Usuário ou senha inválidos.');</script>";

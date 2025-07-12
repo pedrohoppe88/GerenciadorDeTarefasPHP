@@ -10,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($name) || empty($password) || empty($graduacao)) {
         echo "<script>alert('Preencha todos os campos.');</script>";
     } else {
-        
         $usuario = new UserModel($name, $password, $graduacao);
         $result = $usuario->cadastrar();
 
@@ -18,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: ../login.php");
             exit();
         } else {
-            echo "<script>alert('Erro ao cadastrar usuário.');</script>";
+            // Mostra mensagem de erro detalhada do PDO para depuração
+            echo "<script>alert('Erro ao cadastrar usuário. Verifique se o usuário já existe ou se há erro no banco.');</script>";
         }
     }
 }

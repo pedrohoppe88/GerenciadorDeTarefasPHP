@@ -25,7 +25,7 @@ foreach ($dados as $row) {
     $index = $row['mes'] - 1;
     if ($row['status'] === 'pendente') {
         $pendentes[$index] = (int)$row['total'];
-    } else {
+    } elseif ($row['status'] === 'concluida') {
         $concluidas[$index] = (int)$row['total'];
     }
 }

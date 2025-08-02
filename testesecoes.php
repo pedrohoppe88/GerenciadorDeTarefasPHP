@@ -7,6 +7,12 @@ $conn = $conexao->getConnection();
 $stmt = $conn->prepare("SELECT nome, localizacao FROM secoes");
 $stmt->execute();
 $sessoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Proteção: impede acesso se não estiver logado
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>

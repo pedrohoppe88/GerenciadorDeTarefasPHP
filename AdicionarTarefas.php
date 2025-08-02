@@ -1,6 +1,13 @@
 
 <?php
 require_once 'Model/Conexao.php';
+
+// Proteção: impede acesso se não estiver logado
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit();
+}
+
 $conexao = new Conexao();
 $conn = $conexao->getConnection();
 $stmt = $conn->prepare("SELECT id, nome FROM secoes");
